@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<robot>
+
+  <!-- ros_control plugin -->
+  <gazebo>
+    <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
+      <robotNamespace>/blackfly</robotNamespace>
+    </plugin>
+  </gazebo>
+
+  <!-- Pan Motor Stator -->
+  <gazebo reference="pan_motor_stator">
+    <material>Gazebo/Orange</material>
+  </gazebo>
+
+  <!-- Pan Motor Rotor -->
+  <gazebo reference="pan_motor_rotor">
+    <mu1>0.2</mu1>
+    <mu2>0.2</mu2>
+    <material>Gazebo/Black</material>
+  </gazebo>
+
+  <!-- Motor Link -->
+  <gazebo reference="arm">
+    <mu1>0.2</mu1>
+    <mu2>0.2</mu2>
+    <material>Gazebo/White</material>
+  </gazebo> 
+
+  <!-- Motor Link -->
+  <gazebo reference="tilt_motor_stator">
+    <mu1>0.2</mu1>
+    <mu2>0.2</mu2>
+    <material>Gazebo/Orange</material>
+  </gazebo> 
+
+  <!-- Motor Link -->
+  <gazebo reference="tilt_motor_rotor">
+    <mu1>0.2</mu1>
+    <mu2>0.2</mu2>
+    <material>Gazebo/Black</material>
+  </gazebo> 
+    
+</robot>

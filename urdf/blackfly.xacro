@@ -1,0 +1,168 @@
+<?xml version='1.0'?> 
+<!-- Revolute-Revolute Manipulator -->
+<robot name="blackfly" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+<!-- Import all Gazebo-customization elements, including Gazebo colors -->
+  <xacro:include filename="$(find blackfly_gimbal)/urdf/blackfly.gazebo" />
+  <!-- Import Rviz colors -->
+  <xacro:include filename="$(find blackfly_gimbal)/urdf/materials.xacro" />
+
+
+  <!-- Used for fixing robot to Gazebo 'base_link' -->
+  <link name="world"/>
+
+<!-- Joint used to anchor robot to world via the stator portion of the pan-axis motor -->
+  <joint name="anchor" type="fixed">
+    <parent link="world"/>
+    <child link="pan_motor_stator"/>
+  </joint>
+
+<!-- Link used to define the stator portion of the pan-axis motor-->
+  <link name='pan_motor_stator'>
+    <visual>
+        <origin xyz="0 0 0.005" rpy="0 0 0"/>
+        <geometry>
+          <cylinder radius="0.03335" length="0.010"/>
+        </geometry>
+    </visual>
+    <inertial>
+        <origin xyz="0 0 0.005" rpy="0 0 0"/>
+        <mass value="0.12398"/>
+        <inertia ixx="0.00003572290"  ixy="0"  ixz="0" iyy="0.00003572290" iyz="0" izz="0.00006894558" />
+    </inertial>
+  </link>
+
+<!-- Joint used to allow rotational motion about the z-axis of the pan-axis rotor about the z-axis of the pan-axis stator -->
+  <joint name="pan_stator_to_rotor" type="revolute">
+    <parent link="pan_motor_stator"/>
+    <child link="pan_motor_rotor"/>
+    <axis xyz="0 0 1"/>
+    <limit lower="-1.5707" upper="1.5707" effort="30.0" velocity="200"/>
+  </joint>
+
+<!-- Link used to define the rotor portion of the pan-axis motor -->
+  <link name="pan_motor_rotor">
+    <inertial>
+        <origin xyz="0 0 0.028" rpy="0 0 0"/>
+        <mass value="0.3553"/>
+        <inertia ixx="0.00014021408" ixy="0.00" ixz="0.00" iyy="0.00014021408" iyz="0.00" izz="0.00002197426" />
+    </inertial>
+    <visual>
+        <origin xyz="0 0 0.028" rpy="0 0 0"/>
+        <geometry>
+            <cylinder radius="0.03335" length="0.034"/>
+        </geometry>
+    </visual>
+  </link>
+
+<!-- Joint used to fix the rotor portion of the pan-axis motor to the arm link -->
+  <joint name="arm_to_pan" type="fixed">
+    <parent link="pan_motor_rotor"/>
+    <child link="arm"/>
+  </joint>
+
+<!-- Link used to define of the arm that joins the tilt and pan-axis motors -->
+  <link name="arm">
+      <inertial>
+        <origin xyz="0 -0.03598 0.06231" rpy="0 0 0"/>
+        <mass value=".05239"/>
+        <inertia ixx="0.00007617354" ixy="0.00" ixz="0.00" iyy="0.000036508" iyz="-0.00002214887" izz="0.00006684559"/>
+      </inertial>
+    <!-- Cylindrical portion of the arm that sits on pan-axis motor -->
+      <visual>
+        <origin xyz="0 0 0.0475" rpy="0 0 0"/>
+        <geometry>
+            <cylinder radius="0.03335" length="0.005"/>
+        </geometry>
+      </visual>
+    <!-- Boxed portion of the arm that extends from the pan-axis motor -->
+      <visual>
+        <origin xyz="0 -0.03352 0.0475" rpy="0 0 0"/>
+        <geometry>
+            <box size="0.045 0.06704 0.005"/>
+        </geometry>
+      </visual>
+    <!-- Boxed portion of the arm that extends from the tilt-axis motor -->
+      <visual>
+        <origin xyz="0 -0.06454 0.06727" rpy="0 0 0"/>
+        <geometry>
+            <box size="0.045 0.005 0.03454"/>
+        </geometry>
+      </visual>
+    <!-- Cylindrical portion of the arm that connects to base of tilt-axis motor -->
+      <visual>
+        <origin xyz="0 -0.06454 0.08454" rpy="-1.5707 0 0"/>
+        <geometry>
+            <cylinder radius="0.03335" length="0.005"/>
+        </geometry>
+      </visual>
+    </link>
+<!-- Joint used to fix the stator portion of the tilt-axis motor to the link arm -->
+  <joint name="tilt_stator_to_arm" type="fixed">
+    <parent link="arm"/>
+    <child link="tilt_motor_stator"/>
+  </joint>
+
+<!-- Link used to define the stator portion of the tilt-axis motor -->
+  <link name='tilt_motor_stator'>
+    <inertial>
+        <origin xyz="0 -0.05704 0.08454" rpy="-1.5707 0 0"/>
+        <mass value="0.12398"/>
+        <inertia ixx="0.00003572290"  ixy="0"  ixz="0" iyy="0.00003572290" iyz="0" izz="0.00006894558" />
+    </inertial>
+    <visual>
+        <origin xyz="0 -0.05704 0.08454" rpy="-1.5707 0 0"/>
+        <geometry>
+            <cylinder radius="0.03335" length="0.010"/>
+        </geometry>
+    </visual>
+  </link>
+
+<!-- Joint used to allow rotational motion about the z-axis of the tilt-axis rotor about the z-axis of the tilt-axis stator -->
+  <joint name="tilt_stator_to_rotor" type="revolute">
+    <axis xyz="0 0 1"/>
+    <parent link="tilt_motor_stator"/>
+    <child link="tilt_motor_rotor"/>
+    <limit lower="-1.5707" upper="1.5707" effort="30.0" velocity="200"/>
+  </joint>
+
+<!-- Link used to define the rotor portion of the tilt-axis motor -->
+  <link name="tilt_motor_rotor">
+      <inertial>
+        <origin xyz="0 -0.03404 0.08454" rpy="-1.5707 -1.5707 0"/>
+        <mass value="0.3553"/>
+        <inertia ixx="0.00014021408" ixy="0.00" ixz="0.00" iyy="0.00014021408" iyz="0.00" izz="0.00002197426" />
+      </inertial>
+
+      <visual>
+          <origin xyz="0 -0.03404 0.08454" rpy="-1.5707 -1.5707 0"/>
+          <geometry>
+              <cylinder radius="0.03335" length="0.034"/>
+          </geometry>
+      </visual>
+  </link>
+
+<!-- Pan-axis motor transmission element -->
+  <transmission name="simple_trans">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="pan_stator_to_rotor">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="PanBLDC">
+      <mechanicalReduction>1</mechanicalReduction>
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </actuator>
+  </transmission>
+
+<!-- Tilt-axis motor transmission element -->
+  <transmission name="simple_trans">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="tilt_stator_to_rotor">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="PanBLDC">
+      <mechanicalReduction>1</mechanicalReduction>
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </actuator>
+  </transmission>
+</robot>
